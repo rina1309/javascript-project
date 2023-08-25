@@ -58,3 +58,46 @@ tabsParent.onclick = (event) => {
 }
 setInterval(slideCards, 3000);
 
+//converter
+
+const som = document.querySelector('#som')
+const usd = document.querySelector('#usd')
+const eur = document.querySelector('#eur')
+
+// som.addEventListener('input',() => {
+//     const request = new XMLHttpRequest
+//     request.open("GET", "../data/converter.json")
+//     request.setRequestHeader("Content-type", "application/json")
+//     request.send()
+
+//     request.addEventListener('load', () => {
+//         const response = JSON.parse(request.response)
+//         usd.value = (som.value / response.usd).toFixed(2)
+//     })
+// })
+
+const converter = (element, target, exchangeRate) => {
+    element.addEventListener('input', () => {
+        const inputValue = parseFloat(element.value);
+        target.value = (inputValue * exchangeRate).toFixed(2) || ''
+    })
+}
+
+const request = new XMLHttpRequest()
+request.open("GET", "../data/converter.json")
+request.setRequestHeader("Content-type", "application/json")
+request.send();
+
+request.onload = () => {
+    const exchangeRates = JSON.parse(request.response)
+    converter(som, usd, 1 / exchangeRates.usd)
+    converter(som, eur, 1 / exchangeRates.eur)
+    converter(usd, som, exchangeRates.usd)
+    converter(usd, eur, exchangeRates.usd / exchangeRates.eur)
+    converter(eur, som, exchangeRates.eur)
+    converter(eur, usd, exchangeRates.eur / exchangeRates.usd)
+};
+
+
+
+//0, '', null, Nan, false, undefined = false
