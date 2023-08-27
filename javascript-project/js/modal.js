@@ -46,3 +46,13 @@ const autoModal = () => {
 
 autoModal();
 
+//POST DATA
+
+//preventDefault - для форм, для того чтобы при нажатии кнопки, страница не перегружалась и не теряла данные2w
+
+const form = document.querySelector('.form')
+
+const postData = (url, dataJson) => {
+    const response = fetch
+}
+

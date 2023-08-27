@@ -64,18 +64,6 @@ const som = document.querySelector('#som')
 const usd = document.querySelector('#usd')
 const eur = document.querySelector('#eur')
 
-// som.addEventListener('input',() => {
-//     const request = new XMLHttpRequest
-//     request.open("GET", "../data/converter.json")
-//     request.setRequestHeader("Content-type", "application/json")
-//     request.send()
-
-//     request.addEventListener('load', () => {
-//         const response = JSON.parse(request.response)
-//         usd.value = (som.value / response.usd).toFixed(2)
-//     })
-// })
-
 const converter = (element, target, exchangeRate) => {
     element.addEventListener('input', () => {
         const inputValue = parseFloat(element.value);
@@ -99,5 +87,47 @@ request.onload = () => {
 };
 
 
+//CARD SWITCHER
 
-//0, '', null, Nan, false, undefined = false
+const card = document.querySelector('.card')
+const btnPrev = document.querySelector('#btn-prev')
+const btnNext = document.querySelector('#btn-next')
+let count = 1
+
+const dataInfo = () => {
+    fetch(`https://jsonplaceholder.typicode.com/todos/${count}`)
+    .then(response => response.json())
+    .then(data => {
+        card.innerHTML = `
+            <p>${data.title}</p>
+            <p style="color: ${data.completed ? 'green' : 'red'}">${data.completed}</p>
+            <span>${data.id}</span>
+        `
+    })
+}
+
+btnNext.onclick = () => {
+    if(count <= 199){
+        count++
+    }else{
+        count = 1
+    }
+    dataInfo(count)
+}
+btnPrev.onclick = () => {
+    if(count <= 1){
+        count = 200
+    }else{
+        count--
+    }
+    dataInfo(count)
+}
+dataInfo()
+
+//задание 2
+
+fetch('https://jsonplaceholder.typicode.com/posts')
+    .then((response) => response.json())
+    .then((data) => {
+        console.log(data);
+    })
