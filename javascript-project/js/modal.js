@@ -50,9 +50,40 @@ autoModal();
 
 //preventDefault - для форм, для того чтобы при нажатии кнопки, страница не перегружалась и не теряла данные2w
 
-const form = document.querySelector('.form')
+const form = document.querySelector('form')
 
-const postData = (url, dataJson) => {
-    const response = fetch
+// const postData = (url, dataJson) => {
+//     const response = fetch(url, {
+//         method: "POST",
+//         headers: {"Content-type" : "application/json"},
+//         body: dataJson
+//     })
+//     return(response)
+// }
+
+const postData = async (url, dataJson) => {
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: dataJson,
+        })
+        return response
+    } catch {
+        console.error('Error')
+    }
 }
+const bindPostData = (form) => {
+    form.onsubmit = (event) => {
+        event.preventDefault()
+        const formData = new formData(form)
+        const obj = {}
+        formData.forEach = ((item, i) => {
+            obj[1] = item
+        })
+        const json = json.stringify(obj)
+        postData('server.php', json)
+    }
+}
+bindPostData(form)
 

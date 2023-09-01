@@ -1,5 +1,4 @@
 /* HEADER */
-
 .header {
     height: 80px;
     background: #2c2d2f;
@@ -222,3 +221,45 @@
     width: 100% !important;
     margin-top: 10px;
 }
+
+/* news */
+.wrapper {
+    background-color: black;
+}
+.news__wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    justify-content: center;
+    padding-top: 200px;
+    padding-bottom: 200px;
+}
+.cardNews {
+    width: 400px;
+    border: 1px solid orange;
+    border-radius: 10px;
+    padding: 15px;
+    color: rgb(116, 109, 109);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: justify;
+}
+.cardNews h3 {
+    font-size: 18px;
+    color: orange;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.cardNews p {
+    font-size: 16px;
+    line-height: 25px;
+
+}
+.cardNews img {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 200px;
+    height: 200px;
+}
+

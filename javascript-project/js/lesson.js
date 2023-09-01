@@ -71,20 +71,29 @@ const converter = (element, target, exchangeRate) => {
     })
 }
 
-const request = new XMLHttpRequest()
-request.open("GET", "../data/converter.json")
-request.setRequestHeader("Content-type", "application/json")
-request.send();
-
-request.onload = () => {
-    const exchangeRates = JSON.parse(request.response)
-    converter(som, usd, 1 / exchangeRates.usd)
-    converter(som, eur, 1 / exchangeRates.eur)
-    converter(usd, som, exchangeRates.usd)
-    converter(usd, eur, exchangeRates.usd / exchangeRates.eur)
-    converter(eur, som, exchangeRates.eur)
-    converter(eur, usd, exchangeRates.eur / exchangeRates.usd)
+const fetchExchangeRates = async () => {
+    try {
+        const response = await fetch('../data/converter.json'); // Replace with the actual URL
+        const exchangeRates = await response.json();
+        return exchangeRates;
+    } catch {
+        console.error('error')
+    }
 };
+
+const initializeConverter = async () => {
+    const exchangeRates = await fetchExchangeRates();
+    if (exchangeRates) {
+        converter(som, usd, 1 / exchangeRates.usd);
+        converter(som, eur, 1 / exchangeRates.eur);
+        converter(usd, som, exchangeRates.usd);
+        converter(usd, eur, exchangeRates.usd / exchangeRates.eur);
+        converter(eur, som, exchangeRates.eur);
+        converter(eur, usd, exchangeRates.eur / exchangeRates.usd);
+    }
+};
+
+initializeConverter();
 
 
 //CARD SWITCHER
@@ -94,16 +103,16 @@ const btnPrev = document.querySelector('#btn-prev')
 const btnNext = document.querySelector('#btn-next')
 let count = 1
 
-const dataInfo = () => {
-    fetch(`https://jsonplaceholder.typicode.com/todos/${count}`)
-    .then(response => response.json())
-    .then(data => {
-        card.innerHTML = `
+//async await
+
+const dataInfo = async () => {
+    const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${count}`)
+    const data = await response.json()
+    card.innerHTML = `
             <p>${data.title}</p>
             <p style="color: ${data.completed ? 'green' : 'red'}">${data.completed}</p>
             <span>${data.id}</span>
         `
-    })
 }
 
 btnNext.onclick = () => {
@@ -125,9 +134,36 @@ btnPrev.onclick = () => {
 dataInfo()
 
 //задание 2
+//async await
 
-fetch('https://jsonplaceholder.typicode.com/posts')
-    .then((response) => response.json())
-    .then((data) => {
-        console.log(data);
-    })
+const consoleResponse = async () => {
+    try{
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts')
+        const data = await response.json()
+        console.log(data)
+    }catch{
+        console.error('Error!')
+    }
+}
+consoleResponse()
+
+//API
+
+const cityNameInput = document.querySelector('.cityName')
+const citySpan = document.querySelector('.city')
+const tempSpan = document.querySelector('.temp')
+
+const baseUrl = 'https://api.openweathermap.org/data/2.5/weather'
+const apiKey = 'e417df62e04d3b1b111abeab19cea714'
+
+cityNameInput.oninput = async (event) => {
+    try{
+        const response = await fetch(`${baseUrl}?q=${event.target.value}&appid=${apiKey}`)
+        const data = await response.json()
+        citySpan.innerHTML = data?.name ? data.name : 'Город не найден...'
+        tempSpan.innerHTML = data?.main?.temp ? Math.round(data?.main?.temp - 273) + '&deg;C' : "..."
+    }catch{
+        alert("Error!")
+    }
+}
+

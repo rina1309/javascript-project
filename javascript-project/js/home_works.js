@@ -16,35 +16,81 @@ gmailButton.onclick = () => {
     }
 };
 
-//move block
+//move clock
 
-const childBlock = document.querySelector(".child_block")
+const childBlock = document.querySelector('.child_block')
+const parentBlock = document.querySelector('.parent_block')
 
-let positionLeft = 0
-let positionRight = 0
-let positionBottomRight = 0
-let positionBottomLeft = 0
 
-const moveBlock = () => {
-    if (positionLeft === 0) {
-        positionLeft++
-        childBlock.style.right = positionLeft + "px"
-        setTimeout(moveBlock, 1500)
-    } else if (positionRight === 0 && positionBottomRight === 0) {
-        positionRight++
-        childBlock.style.bottom = positionRight + "px"
-        setTimeout(moveBlock, 1500)
-    } else if (positionBottomRight === 0 && positionBottomLeft < 448) {
-        positionBottomRight++
-        childBlock.style.left = positionBottomRight + "px"
-        setTimeout(moveBlock, 1500)
-    } else if (positionBottomLeft === 0 && positionLeft < 448) {
-        positionBottomLeft++
-        childBlock.style.top = positionBottomLeft + "px"
-        setTimeout(moveBlock, 1500)
+let positionX = 0
+let positionY = 0
+
+const move = () => {
+    if (positionX < 449 && positionY === 0) {
+        positionX+=2
+        childBlock.style.left = `${positionX}px`
+        setTimeout(move, 10)
+    } else if (positionX >= 449 && positionY < 449) {
+        positionY+=2
+        childBlock.style.top = `${positionY}px`
+        setTimeout(move, 10)
+    } else if (positionX > 0 && positionY > 0) {
+        positionX-=2
+        childBlock.style.left = `${positionX}px`
+        setTimeout(move, 10)
+    } else if (positionX === 0 && positionY > 0) {
+        positionY-=2
+        childBlock.style.top = `${positionY}px`
+        setTimeout(move, 10)
     }
 }
-moveBlock()
+
+move()
+
+const seconds = document.querySelector('.seconds');
+const minutes = document.querySelector('.minutes');
+const minute = document.querySelector('.minute');
+const hour = document.querySelector('.hour');
+
+for(let s = 0; s < 60; s++){
+    let mSpikeEl = document.createElement('i');
+    let sSpikeEl = document.createElement('i');
+    mSpikeEl.className = 'spike'
+    sSpikeEl.className = 'spike'
+    mSpikeEl.style = `--rotate:${6 * s}deg`;
+    sSpikeEl.style = `--rotate:${6 * s}deg`;
+    mSpikeEl.setAttribute('data-i', s);
+    sSpikeEl.setAttribute('data-i', s);
+
+    seconds.append(sSpikeEl);
+    minutes.append(mSpikeEl);
+}
+
+const getTime = () => {
+    let date = new Date(),
+        s  = date.getSeconds() ,
+        m  = date.getMinutes();
+
+    hour.textContent = date.getHours();
+    minute.textContent = m;
+    minutes.style = `--dRotate:${6 * m}deg`;
+
+    if(s === 0){
+        seconds.classList.add('stop-anim')
+    } else{
+        seconds.classList.remove('stop-anim')
+    }
+    if(m === 0){
+        minutes.classList.add('stop-anim')
+    } else{
+        minutes.classList.remove('stop-anim')
+    }
+
+    seconds.style = `--dRotate:${6 * s}deg`;
+}
+
+setInterval(getTime, 1000);
+getTime();
 
 //Stop Watch
 
